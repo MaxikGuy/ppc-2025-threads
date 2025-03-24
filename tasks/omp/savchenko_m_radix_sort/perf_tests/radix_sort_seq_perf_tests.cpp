@@ -2,13 +2,13 @@
 
 #include <chrono>
 
-#include "seq/savchenko_m_radix_sort/include/sorter.hpp"
-#include "seq/savchenko_m_radix_sort/include/util.hpp"
+#include "omp/savchenko_m_radix_sort/include/sorter.hpp"
+#include "omp/savchenko_m_radix_sort/include/util.hpp"
 
-namespace savchenko_m_radix_sort_seq {
+namespace savchenko_m_radix_sort_omp {
 	bool create_and_sort(size_t n, int min, int max) {
-		savchenko_m_radix_sort_seq::Sorter sorter;
-		savchenko_m_radix_sort_seq::Util util;
+		savchenko_m_radix_sort_omp::Sorter sorter;
+		savchenko_m_radix_sort_omp::Util util;
 
 		std::vector<int> input = util.random_vector_int(n, min, max);
 		std::vector<int> output(n, 0);
@@ -26,42 +26,42 @@ namespace savchenko_m_radix_sort_seq {
 	}
 }
 
-TEST(savchenko_m_radix_sort_seq, perf_test1) {
+TEST(savchenko_m_radix_sort_omp, perf_test1) {
 	const size_t n = 50000000; // 50.000.000
 	const int min = 0;
 	const int max = 100000;
 	
-	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
+	ASSERT_TRUE(savchenko_m_radix_sort_omp::create_and_sort(n, min, max));
 }
 
-TEST(savchenko_m_radix_sort_seq, perf_test2) {
+TEST(savchenko_m_radix_sort_omp, perf_test2) {
 	const size_t n = 50000000; // 50.000.000
 	const int min = -100000;
 	const int max = 100000;
 
-	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
+	ASSERT_TRUE(savchenko_m_radix_sort_omp::create_and_sort(n, min, max));
 }
 
-TEST(savchenko_m_radix_sort_seq, perf_test3) {
+TEST(savchenko_m_radix_sort_omp, perf_test3) {
 	const size_t n = 50000000; // 50.000.000
 	const int min = 0;
 	const int max = 100;
 
-	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
+	ASSERT_TRUE(savchenko_m_radix_sort_omp::create_and_sort(n, min, max));
 }
 
-TEST(savchenko_m_radix_sort_seq, perf_test4) {
+TEST(savchenko_m_radix_sort_omp, perf_test4) {
 	const size_t n = 50000000; // 50.000.000
 	const int min = -100;
 	const int max = 100;
 
-	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
+	ASSERT_TRUE(savchenko_m_radix_sort_omp::create_and_sort(n, min, max));
 }
 
-TEST(savchenko_m_radix_sort_seq, perf_test_MIN_MAX_INT) {
+TEST(savchenko_m_radix_sort_omp, perf_test_MIN_MAX_INT) {
 	const size_t n = 50000000; // 50.000.000
 	const int min = INT_MIN;
 	const int max = INT_MAX;
 
-	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
+	ASSERT_TRUE(savchenko_m_radix_sort_omp::create_and_sort(n, min, max));
 }
