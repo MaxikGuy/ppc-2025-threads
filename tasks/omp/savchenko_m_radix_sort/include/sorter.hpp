@@ -15,9 +15,9 @@ public:
 protected:
 	int get_bit(int num, int bit_pos);
 
-	void counting_sort_seq(std::vector<int>& arr, int exp);
-	void counting_sort_omp(std::vector<int>& arr, int exp);
-	void counting_sort_tbb(std::vector<int>& arr, int exp);
+	void counting_sort_seq(std::vector<int>& arr, int bit_pos);
+	void counting_sort_omp(std::vector<int>& arr, int bit_pos);
+	void counting_sort_tbb(std::vector<int>& arr, int bit_pos);
 
 };
 

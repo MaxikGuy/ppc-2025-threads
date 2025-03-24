@@ -14,7 +14,7 @@ namespace savchenko_m_radix_sort_omp {
 		std::vector<int> output(n, 0);
 
 		auto start = std::chrono::high_resolution_clock::now();
-		sorter.radix_sort_seq(input.data(), output.data(), n);
+		sorter.radix_sort_omp(input.data(), output.data(), n);
 		auto end = std::chrono::high_resolution_clock::now();
 
 		std::chrono::duration<double> duration = end - start;
@@ -24,6 +24,26 @@ namespace savchenko_m_radix_sort_omp {
 
 		return sorter.is_sorted(output.data(), n);
 	}
+}
+
+TEST(savchenko_m_radix_sort_omp, simple) {
+	const size_t n = 20;
+	const int min = 0;
+	const int max = 100;
+
+	savchenko_m_radix_sort_omp::Sorter sorter;
+	savchenko_m_radix_sort_omp::Util util;
+
+	std::vector<int> input = util.random_vector_int(n, min, max);
+	std::vector<int> output(n, 0);
+
+	std::cout << "Original arr: ";
+	util.print_arr(input);
+	sorter.radix_sort_omp(input.data(), output.data(), n);
+	std::cout << "Sorted arr: ";
+	util.print_arr(output);
+
+	ASSERT_TRUE(sorter.is_sorted(output.data(), n));
 }
 
 TEST(savchenko_m_radix_sort_omp, func_test1) {

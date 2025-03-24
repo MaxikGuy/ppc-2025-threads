@@ -10,11 +10,11 @@ namespace savchenko_m_radix_sort_omp {
 		savchenko_m_radix_sort_omp::Sorter sorter;
 		savchenko_m_radix_sort_omp::Util util;
 
-		std::vector<int> input = util.random_vector_int(n, min, max);
+		std::vector<int> input = util.random_vector_int(n, min, max, 0);
 		std::vector<int> output(n, 0);
 
 		auto start = std::chrono::high_resolution_clock::now();
-		sorter.radix_sort_seq(input.data(), output.data(), n);
+		sorter.radix_sort_omp(input.data(), output.data(), n);
 		auto end = std::chrono::high_resolution_clock::now();
 
 		std::chrono::duration<double> duration = end - start;
