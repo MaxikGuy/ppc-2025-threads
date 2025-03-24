@@ -10,7 +10,7 @@ namespace savchenko_m_radix_sort_seq {
 		savchenko_m_radix_sort_seq::Sorter sorter;
 		savchenko_m_radix_sort_seq::Util util;
 
-		std::vector<int> input = util.random_vector_int(n, min, max);
+		std::vector<int> input = util.random_vector_int(n, min, max, 0);
 		std::vector<int> output(n, 0);
 
 		auto start = std::chrono::high_resolution_clock::now();

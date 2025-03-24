@@ -4,6 +4,9 @@
 #include <numeric>
 #include <stdexcept>
 
+#include <iostream>
+#include <chrono>
+
 bool savchenko_m_radix_sort_seq::Sorter::is_sorted(int* arr, size_t n) const{
 	if (n <= 0) {
 		throw std::out_of_range("ERROR: n must be greater than 0");
@@ -53,7 +56,7 @@ void savchenko_m_radix_sort_seq::Sorter::radix_sort_seq(int* input, int* output,
 			pos_count++;
 		}
 	}
-
+	
 	std::vector<int> negatives(neg_count);
 	std::vector<int> positives(pos_count);
 	size_t pos_ind = 0;
@@ -61,10 +64,12 @@ void savchenko_m_radix_sort_seq::Sorter::radix_sort_seq(int* input, int* output,
 	for (size_t i = 0; i < n; i++) {
 		int num = input[i];
 		if (num < 0) {
-			negatives[neg_ind++] = -num;
+			negatives[neg_ind] = -num;
+			neg_ind++;
 		}
 		else {
-			positives[pos_ind++] = num;
+			positives[pos_ind] = num;
+			pos_ind++;
 		}
 	}
 	
@@ -85,11 +90,15 @@ void savchenko_m_radix_sort_seq::Sorter::radix_sort_seq(int* input, int* output,
 			counting_sort_seq(positives, bit_pos);
 		}
 	}
-	
+
 
 	// post processing
-	std::copy(negatives.begin(), negatives.end(), output);
-	std::copy(positives.begin(), positives.end(), output + negatives.size());
+	if (!negatives.empty()) {
+		std::copy(negatives.begin(), negatives.end(), output);
+	}
+	if (!positives.empty()) {
+		std::copy(positives.begin(), positives.end(), output + negatives.size());
+	}
 }
 
 void savchenko_m_radix_sort_seq::Sorter::counting_sort_seq(std::vector<int>& arr, int bit_pos) {

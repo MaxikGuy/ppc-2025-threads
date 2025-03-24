@@ -26,6 +26,26 @@ namespace savchenko_m_radix_sort_seq {
 	}
 }
 
+TEST(savchenko_m_radix_sort_seq, simple) {
+	const size_t n = 20;
+	const int min = 0;
+	const int max = 100;
+
+	savchenko_m_radix_sort_seq::Sorter sorter;
+	savchenko_m_radix_sort_seq::Util util;
+
+	std::vector<int> input = util.random_vector_int(n, min, max);
+	std::vector<int> output(n, 0);
+
+	std::cout << "Original arr: ";
+	util.print_arr(input);
+	sorter.radix_sort_seq(input.data(), output.data(), n);
+	std::cout << "Sorted arr: ";
+	util.print_arr(output);
+
+	ASSERT_TRUE(sorter.is_sorted(output.data(), n));
+}
+
 TEST(savchenko_m_radix_sort_seq, func_test1) {
 	const size_t n = 100000;
 	const int min = 0;
