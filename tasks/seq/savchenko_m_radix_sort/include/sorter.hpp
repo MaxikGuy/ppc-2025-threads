@@ -13,17 +13,11 @@ public:
 	void radix_sort_tbb(int* input, int* output, size_t n);
 
 protected:
-	// seq
+	int get_bit(int num, int bit_pos);
+
 	void counting_sort_seq(std::vector<int>& arr, int exp);
-	void radix_sort_positives_seq(std::vector<int>& arr);
-
-	// omp
 	void counting_sort_omp(std::vector<int>& arr, int exp);
-	void radix_sort_positives_omp(std::vector<int>& arr);
-
-	// tbb
 	void counting_sort_tbb(std::vector<int>& arr, int exp);
-	void radix_sort_positives_tbb(std::vector<int>& arr);
 
 };
 

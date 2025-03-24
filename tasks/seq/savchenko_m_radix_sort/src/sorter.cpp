@@ -23,9 +23,14 @@ bool savchenko_m_radix_sort_seq::Sorter::is_sorted(int* arr, size_t n) const{
 	return flag;
 }
 
+int savchenko_m_radix_sort_seq::Sorter::get_bit(int num, int bit_pos) {
+	return (num >> bit_pos) & 1;
+}
+
 // SEQ
 
 void savchenko_m_radix_sort_seq::Sorter::radix_sort_seq(int* input, int* output, size_t n) {
+	// validation
 	if (n <= 0) {
 		throw std::out_of_range("ERROR: n must be greater than 0");
 	}
@@ -35,64 +40,80 @@ void savchenko_m_radix_sort_seq::Sorter::radix_sort_seq(int* input, int* output,
 	if (output == nullptr) {
 		throw std::invalid_argument("ERROR: output should not be NULL");
 	}
-
-	std::vector<int> negatives;
-	std::vector<int> positives;
-
+	
+	// pre processing
+	size_t pos_count = 0;
+	size_t neg_count = 0;
 	for (size_t i = 0; i < n; i++) {
-		int val = input[i];
-		if (val < 0) {
-			negatives.push_back(-val);
-		} else {
-			positives.push_back(val);
+		int num = input[i];
+		if (num < 0) {
+			neg_count++;
+		}
+		else {
+			pos_count++;
 		}
 	}
 
+	std::vector<int> negatives(neg_count);
+	std::vector<int> positives(pos_count);
+	size_t pos_ind = 0;
+	size_t neg_ind = 0;
+	for (size_t i = 0; i < n; i++) {
+		int num = input[i];
+		if (num < 0) {
+			negatives[neg_ind++] = -num;
+		}
+		else {
+			positives[pos_ind++] = num;
+		}
+	}
+	
+	// radix sort
+	const int bit_count = sizeof(int) * 8;
 	if (!negatives.empty()) {
-		radix_sort_positives_seq(negatives);
+		for (int bit_pos = 0; bit_pos < bit_count; bit_pos++) {
+			counting_sort_seq(negatives, bit_pos);
+		}
 		std::reverse(negatives.begin(), negatives.end());
-		for (int& num : negatives) {
-			num = -num;
+		for (size_t i = 0; i < neg_count; i++) {
+			negatives[i] = -negatives[i];
 		}
 	}
 
 	if (!positives.empty()) {
-		radix_sort_positives_seq(positives);
+		for (int bit_pos = 0; bit_pos < bit_count; bit_pos++) {
+			counting_sort_seq(positives, bit_pos);
+		}
 	}
+	
 
+	// post processing
 	std::copy(negatives.begin(), negatives.end(), output);
 	std::copy(positives.begin(), positives.end(), output + negatives.size());
 }
 
-void savchenko_m_radix_sort_seq::Sorter::counting_sort_seq(std::vector<int>& arr, int exp) {
-	std::vector<int> output(arr.size());
-	std::vector<int> count(10, 0);
+void savchenko_m_radix_sort_seq::Sorter::counting_sort_seq(std::vector<int>& arr, int bit_pos) {
+	size_t n = arr.size();
+	std::vector<int> output(n);
+	std::vector<int> count(2, 0);
 
-	for (int num : arr) {
-		int digit = (num / exp) % 10;
-		count[digit]++;
+	for (size_t i = 0; i < n; i++) {
+		int num = arr[i];
+		int bit = get_bit(num, bit_pos);
+		count[bit]++;
 	}
+	
+	count[1] += count[0];
 
-	std::partial_sum(count.begin(), count.end(), count.begin());
-
-	for (size_t i = arr.size(); i > 0; i--) {
-		int digit = (arr[i - 1] / exp) % 10;
-		output[count[digit] - 1] = arr[i - 1];
-		count[digit]--;
+	for (size_t i = n; i > 0; i--) {
+		size_t ind = i - 1;
+		int num = arr[ind];
+		int bit = get_bit(num, bit_pos);
+		output[count[bit] - 1] = num;
+		count[bit]--;
 	}
 
 	arr = output;
-}
-
-void savchenko_m_radix_sort_seq::Sorter::radix_sort_positives_seq(std::vector<int>& arr) {
-	if (arr.empty()) {
-		return;
-	}
-
-	int max = *std::max_element(arr.begin(), arr.end());
-	for (int exp = 1; max / exp > 0; exp *= 10) {
-		counting_sort_seq(arr, exp);
-	}
 }
 
 // OMP
@@ -107,11 +128,6 @@ void savchenko_m_radix_sort_seq::Sorter::counting_sort_omp(std::vector<int>& arr
 	throw "NOT IMPLEMENTED";
 }
 
-void savchenko_m_radix_sort_seq::Sorter::radix_sort_positives_omp(std::vector<int>& arr) {
-
-	throw "NOT IMPLEMENTED";
-}
-
 // TBB
 
 void savchenko_m_radix_sort_seq::Sorter::radix_sort_tbb(int* input, int* output, size_t n) {
@@ -120,11 +136,6 @@ void savchenko_m_radix_sort_seq::Sorter::radix_sort_tbb(int* input, int* output,
 }
 
 void savchenko_m_radix_sort_seq::Sorter::counting_sort_tbb(std::vector<int>& arr, int exp) {
-
-	throw "NOT IMPLEMENTED";
-}
-
-void savchenko_m_radix_sort_seq::Sorter::radix_sort_positives_tbb(std::vector<int>& arr) {
 
 	throw "NOT IMPLEMENTED";
 }
