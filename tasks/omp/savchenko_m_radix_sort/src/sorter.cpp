@@ -30,7 +30,7 @@ bool savchenko_m_radix_sort::Sorter::is_sorted(int* arr, size_t n) const{
 }
 
 uint8_t  savchenko_m_radix_sort::Sorter::get_byte(int num, int byte_pos) const {
-	uint32_t shifted = num - INT_MIN; // Преобразуем int в uint, чтобы отрицательные шли перед положительными
+	uint32_t shifted = num - INT_MIN; // Convert `int` to `uint` so that negatives come before positives.
 	uint8_t byte = (shifted >> (byte_pos * 8)) & 0xFF;
 	return byte;
 }
@@ -103,7 +103,6 @@ void savchenko_m_radix_sort::Sorter::radix_sort_omp(int* input, int* output, siz
 
 	// pre processing
 	std::vector<int> arr(n);
-	//std::memcpy(arr.data(), input, n * sizeof(int));
 	std::copy(input, input + n, arr.data());
 
 	// radix sort
