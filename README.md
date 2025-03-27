@@ -5,6 +5,7 @@
 ```bash
 git clone https://github.com/MaxikGuy/ppc-2025-threads
 cd ppc-2025-threads
+git checkout radix_sort
 mkdir sln
 cmake -D USE_SEQ=ON -D USE_OMP=ON -D USE_TBB=ON -D USE_STL=ON -D USE_FUNC_TESTS=ON -D USE_PERF_TESTS=ON -S ../ppc-2025-threads -B sln -D CMAKE_BUILD_TYPE=Release
 
