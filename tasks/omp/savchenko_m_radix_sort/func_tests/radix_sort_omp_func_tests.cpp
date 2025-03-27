@@ -1,20 +1,21 @@
 #include <gtest/gtest.h>
 
 #include <climits>
+#include <chrono>
 
 #include "omp/savchenko_m_radix_sort/include/sorter.hpp"
 #include "omp/savchenko_m_radix_sort/include/util.hpp"
 
 namespace savchenko_m_radix_sort_omp {
 	bool create_and_sort(size_t n, int min, int max) {
-		savchenko_m_radix_sort_omp::Sorter sorter;
-		savchenko_m_radix_sort_omp::Util util;
+		savchenko_m_radix_sort::Sorter sorter;
+		savchenko_m_radix_sort::Util util;
 
 		std::vector<int> input = util.random_vector_int(n, min, max);
 		std::vector<int> output(n, 0);
 
 		auto start = std::chrono::high_resolution_clock::now();
-		sorter.radix_sort_omp(input.data(), output.data(), n);
+		sorter.radix_sort_omp(input.data(), output.data(), n); // omp
 		auto end = std::chrono::high_resolution_clock::now();
 
 		std::chrono::duration<double> duration = end - start;
@@ -26,20 +27,40 @@ namespace savchenko_m_radix_sort_omp {
 	}
 }
 
-TEST(savchenko_m_radix_sort_omp, simple) {
+TEST(savchenko_m_radix_sort_omp, simple1) {
 	const size_t n = 20;
 	const int min = 0;
 	const int max = 100;
 
-	savchenko_m_radix_sort_omp::Sorter sorter;
-	savchenko_m_radix_sort_omp::Util util;
+	savchenko_m_radix_sort::Sorter sorter;
+	savchenko_m_radix_sort::Util util;
 
 	std::vector<int> input = util.random_vector_int(n, min, max);
 	std::vector<int> output(n, 0);
 
 	std::cout << "Original arr: ";
 	util.print_arr(input);
-	sorter.radix_sort_omp(input.data(), output.data(), n);
+	sorter.radix_sort_seq(input.data(), output.data(), n);
+	std::cout << "Sorted arr: ";
+	util.print_arr(output);
+
+	ASSERT_TRUE(sorter.is_sorted(output.data(), n));
+}
+
+TEST(savchenko_m_radix_sort_omp, simple2) {
+	const size_t n = 20;
+	const int min = -100;
+	const int max = 100;
+
+	savchenko_m_radix_sort::Sorter sorter;
+	savchenko_m_radix_sort::Util util;
+
+	std::vector<int> input = util.random_vector_int(n, min, max);
+	std::vector<int> output(n, 0);
+
+	std::cout << "Original arr: ";
+	util.print_arr(input);
+	sorter.radix_sort_seq(input.data(), output.data(), n);
 	std::cout << "Sorted arr: ";
 	util.print_arr(output);
 
@@ -50,7 +71,7 @@ TEST(savchenko_m_radix_sort_omp, func_test1) {
 	const size_t n = 100000;
 	const int min = 0;
 	const int max = 100;
-	
+
 	ASSERT_TRUE(savchenko_m_radix_sort_omp::create_and_sort(n, min, max));
 }
 

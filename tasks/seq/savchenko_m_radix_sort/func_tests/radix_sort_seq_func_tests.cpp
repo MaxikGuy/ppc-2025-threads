@@ -1,20 +1,21 @@
 #include <gtest/gtest.h>
 
 #include <climits>
+#include <chrono>
 
 #include "seq/savchenko_m_radix_sort/include/sorter.hpp"
 #include "seq/savchenko_m_radix_sort/include/util.hpp"
 
 namespace savchenko_m_radix_sort_seq {
 	bool create_and_sort(size_t n, int min, int max) {
-		savchenko_m_radix_sort_seq::Sorter sorter;
-		savchenko_m_radix_sort_seq::Util util;
+		savchenko_m_radix_sort::Sorter sorter;
+		savchenko_m_radix_sort::Util util;
 
 		std::vector<int> input = util.random_vector_int(n, min, max);
 		std::vector<int> output(n, 0);
 
 		auto start = std::chrono::high_resolution_clock::now();
-		sorter.radix_sort_seq(input.data(), output.data(), n);
+		sorter.radix_sort_seq(input.data(), output.data(), n); // seq
 		auto end = std::chrono::high_resolution_clock::now();
 
 		std::chrono::duration<double> duration = end - start;
@@ -26,13 +27,33 @@ namespace savchenko_m_radix_sort_seq {
 	}
 }
 
-TEST(savchenko_m_radix_sort_seq, simple) {
+TEST(savchenko_m_radix_sort_seq, simple1) {
 	const size_t n = 20;
 	const int min = 0;
 	const int max = 100;
 
-	savchenko_m_radix_sort_seq::Sorter sorter;
-	savchenko_m_radix_sort_seq::Util util;
+	savchenko_m_radix_sort::Sorter sorter;
+	savchenko_m_radix_sort::Util util;
+
+	std::vector<int> input = util.random_vector_int(n, min, max);
+	std::vector<int> output(n, 0);
+
+	std::cout << "Original arr: ";
+	util.print_arr(input);
+	sorter.radix_sort_seq(input.data(), output.data(), n);
+	std::cout << "Sorted arr: ";
+	util.print_arr(output);
+
+	ASSERT_TRUE(sorter.is_sorted(output.data(), n));
+}
+
+TEST(savchenko_m_radix_sort_seq, simple2) {
+	const size_t n = 20;
+	const int min = -100;
+	const int max = 100;
+
+	savchenko_m_radix_sort::Sorter sorter;
+	savchenko_m_radix_sort::Util util;
 
 	std::vector<int> input = util.random_vector_int(n, min, max);
 	std::vector<int> output(n, 0);
@@ -70,7 +91,7 @@ TEST(savchenko_m_radix_sort_seq, func_test3) {
 	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
 }
 
-TEST(savchenko_m_radix_sort_seq, func_test4) {
+TEST(savchenko_m_radix_sort, func_test4) {
 	const size_t n = 100000;
 	const int min = -10000000;
 	const int max = 0;
@@ -94,7 +115,7 @@ TEST(savchenko_m_radix_sort_seq, func_test6) {
 	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
 }
 
-TEST(savchenko_m_radix_sort_seq, MIN_MAX_INT) {
+TEST(savchenko_m_radix_sort, MIN_MAX_INT) {
 	const size_t n = 100000;
 	const int min = INT_MIN;
 	const int max = INT_MAX;

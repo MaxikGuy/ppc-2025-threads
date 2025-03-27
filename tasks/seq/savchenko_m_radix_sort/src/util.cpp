@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 
-int savchenko_m_radix_sort_seq::Util::random_int(const int min, const int max) const {
+int savchenko_m_radix_sort::Util::random_int(const int min, const int max) const{
 	if (min > max) {
 		throw std::invalid_argument("ERROR: min should not be greater than max");
 	}
@@ -15,7 +15,7 @@ int savchenko_m_radix_sort_seq::Util::random_int(const int min, const int max) c
 	return dist(gen);
 }
 
-int savchenko_m_radix_sort_seq::Util::random_int(const int min, const int max, const int seed) const {
+int savchenko_m_radix_sort::Util::random_int(const int min, const int max, const int seed) const {
 	if (min > max) {
 		throw std::invalid_argument("ERROR: min should not be greater than max");
 	}
@@ -26,7 +26,7 @@ int savchenko_m_radix_sort_seq::Util::random_int(const int min, const int max, c
 	return dist(gen);
 }
 
-std::vector<int> savchenko_m_radix_sort_seq::Util::random_vector_int(const size_t n, const int min, const int max) const {
+std::vector<int> savchenko_m_radix_sort::Util::random_vector_int(const size_t n, const int min, const int max) const{
 	if (n <= 0) {
 		throw std::out_of_range("ERROR: n must be greater than 0");
 	}
@@ -46,7 +46,7 @@ std::vector<int> savchenko_m_radix_sort_seq::Util::random_vector_int(const size_
 	return vec;
 }
 
-std::vector<int> savchenko_m_radix_sort_seq::Util::random_vector_int(const size_t n, const int min, const int max, const int seed) const {
+std::vector<int> savchenko_m_radix_sort::Util::random_vector_int(const size_t n, const int min, const int max, const int seed) const {
 	if (n <= 0) {
 		throw std::out_of_range("ERROR: n must be greater than 0");
 	}
@@ -65,7 +65,7 @@ std::vector<int> savchenko_m_radix_sort_seq::Util::random_vector_int(const size_
 	return vec;
 }
 
-void savchenko_m_radix_sort_seq::Util::print_arr(const std::vector<int> arr) {
+void savchenko_m_radix_sort::Util::print_arr(const std::vector<int> arr) {
 	for (int num : arr) {
 		std::cout << num << " ";
 	}

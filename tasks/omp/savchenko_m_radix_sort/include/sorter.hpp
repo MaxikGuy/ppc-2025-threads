@@ -1,8 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <cstdint>
 
-namespace savchenko_m_radix_sort_omp {
+namespace savchenko_m_radix_sort {
 
 class Sorter {
 public:
@@ -13,11 +14,11 @@ public:
 	void radix_sort_tbb(int* input, int* output, size_t n);
 
 protected:
-	int get_bit(int num, int bit_pos);
+	uint8_t get_byte(int num, int byte_pos) const;
 
-	void counting_sort_seq(std::vector<int>& arr, int bit_pos);
-	void counting_sort_omp(std::vector<int>& arr, int bit_pos);
-	void counting_sort_tbb(std::vector<int>& arr, int bit_pos);
+	void counting_sort_seq(std::vector<int>& arr, int byte_pos);
+	void counting_sort_omp(std::vector<int>& arr, int byte_pos);
+	void counting_sort_tbb(std::vector<int>& arr, int byte_pos);
 
 };
 

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-namespace savchenko_m_radix_sort_seq {
+namespace savchenko_m_radix_sort {
 
 class Util {
 public:
