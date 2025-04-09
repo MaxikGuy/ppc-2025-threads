@@ -84,7 +84,7 @@ void savchenko_m_radix_sort::Sorter::counting_sort_seq(std::vector<int>& arr, in
 		output[count[byte]] = arr[i];
 	}
 
-	arr = output;
+	arr = std::move(output);
 }
 
 // OMP
@@ -153,7 +153,7 @@ void savchenko_m_radix_sort::Sorter::counting_sort_omp(std::vector<int>& arr, in
 		output[count[byte]] = arr[i - 1];
 	}
 
-	arr = output;
+	arr = std::move(output);
 }
 
 // TBB
