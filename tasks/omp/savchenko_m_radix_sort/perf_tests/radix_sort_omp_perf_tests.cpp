@@ -11,7 +11,7 @@ namespace savchenko_m_radix_sort_omp {
 		savchenko_m_radix_sort::Sorter sorter;
 		savchenko_m_radix_sort::Util util;
 
-		std::vector<int> input = util.random_vector_int(n, min, max, 0);
+		std::vector<int> input = util.random_vector_int(n, min, max, 0); // seed = 0
 		std::vector<int> output(n, 0);
 
 		auto start = std::chrono::high_resolution_clock::now();

@@ -51,7 +51,7 @@ TEST(savchenko_m_radix_sort_seq, perf_test3) {
 	ASSERT_TRUE(savchenko_m_radix_sort_seq::create_and_sort(n, min, max));
 }
 
-TEST(savchenko_m_radix_sort, perf_test4) {
+TEST(savchenko_m_radix_sort_seq, perf_test4) {
 	const size_t n = 250000000; // 250.000.000
 	const int min = -100;
 	const int max = 100;

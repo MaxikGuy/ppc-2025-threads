@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <stdexcept>
 #include <omp.h>
+#include <chrono>
 
 #include <iostream>
 
@@ -54,10 +55,14 @@ void savchenko_m_radix_sort::Sorter::radix_sort_seq(int* input, int* output, siz
 	std::copy(input, input + n, arr.data());
 
 	// radix sort
+	auto start = std::chrono::high_resolution_clock::now();
 	const int byte_count = sizeof(int); // 4 bytes
 	for (int byte_pos = 0; byte_pos < byte_count; byte_pos++) {
 		counting_sort_seq(arr, byte_pos);
 	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = end - start;
+	std::cout << "seq_time: " << duration.count() << " s." << std::endl;
 
 	// post processing
 	std::copy(arr.begin(), arr.end(), output);
@@ -106,10 +111,14 @@ void savchenko_m_radix_sort::Sorter::radix_sort_omp(int* input, int* output, siz
 	std::copy(input, input + n, arr.data());
 
 	// radix sort
+	auto start = std::chrono::high_resolution_clock::now();
 	const int byte_count = sizeof(int); // 4 bytes
 	for (int byte_pos = 0; byte_pos < byte_count; byte_pos++) {
 		counting_sort_omp(arr, byte_pos);
 	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = end - start;
+	std::cout << "omp_time: " << duration.count() << " s." << std::endl;
 
 	// post processing
 	std::copy(arr.begin(), arr.end(), output);

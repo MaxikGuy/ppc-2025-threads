@@ -7,6 +7,7 @@
 #include <omp.h>
 //#include "oneapi/tbb/parallel_for.h"
 #include "oneapi/tbb.h"
+#include <chrono>
 
 #include <iostream>
 
@@ -19,10 +20,10 @@ bool savchenko_m_radix_sort::Sorter::is_sorted(int* arr, size_t n) const{
 	}
 	
 	bool flag = true;
-	//#pragma omp parallel for shared(flag) schedule(static)
+	#pragma omp parallel for shared(flag) schedule(static)
 	for (int i = 0; i < n - 1; i++) {
 		if (arr[i] > arr[i + 1]) {
-			//#pragma omp critical
+			#pragma omp critical
 			flag = false;
 			break;
 		}
@@ -56,10 +57,14 @@ void savchenko_m_radix_sort::Sorter::radix_sort_seq(int* input, int* output, siz
 	std::copy(input, input + n, arr.data());
 
 	// radix sort
+	auto start = std::chrono::high_resolution_clock::now();
 	const int byte_count = sizeof(int); // 4 bytes
 	for (int byte_pos = 0; byte_pos < byte_count; byte_pos++) {
 		counting_sort_seq(arr, byte_pos);
 	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = end - start;	
+	std::cout << "seq_time: " << duration.count() << " s." << std::endl;
 
 	// post processing
 	std::copy(arr.begin(), arr.end(), output);
@@ -108,10 +113,14 @@ void savchenko_m_radix_sort::Sorter::radix_sort_omp(int* input, int* output, siz
 	std::copy(input, input + n, arr.data());
 
 	// radix sort
+	auto start = std::chrono::high_resolution_clock::now();
 	const int byte_count = sizeof(int); // 4 bytes
 	for (int byte_pos = 0; byte_pos < byte_count; byte_pos++) {
 		counting_sort_omp(arr, byte_pos);
 	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = end - start;
+	std::cout << "omp_time: " << duration.count() << " s." << std::endl;
 
 	// post processing
 	std::copy(arr.begin(), arr.end(), output);
@@ -177,10 +186,14 @@ void savchenko_m_radix_sort::Sorter::radix_sort_tbb(int* input, int* output, siz
 	std::copy(input, input + n, arr.data());
 
 	// radix sort
+	auto start = std::chrono::high_resolution_clock::now();
 	const int byte_count = sizeof(int); // 4 bytes
 	for (int byte_pos = 0; byte_pos < byte_count; byte_pos++) {
 		counting_sort_tbb(arr, byte_pos);
 	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = end - start;
+	std::cout << "tbb_time: " << duration.count() << " s." << std::endl;
 
 	// post processing
 	std::copy(arr.begin(), arr.end(), output);
@@ -224,112 +237,3 @@ void savchenko_m_radix_sort::Sorter::counting_sort_tbb(std::vector<int>& arr, in
 
     arr = std::move(output);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TEMP
-/*
-void savchenko_m_radix_sort::Sorter::counting_sort_tbb(std::vector<int>& arr, int byte_pos) {
-	const size_t n = arr.size();
-	const int range = 256;
-
-	std::vector<int> output(n);
-	//const int num_partitions = tbb::info::default_concurrency();
-	const int num_partitions = tbb::this_task_arena::max_concurrency();
-	//std::cout << num_partitions << std::endl;
-	std::vector<std::vector<int>> local_counts(num_partitions, std::vector<int>(range, 0));
-
-	// 1. Подсчёт локальных частот
-	tbb::parallel_for(tbb::blocked_range<size_t>(0, n),
-		[&](const tbb::blocked_range<size_t>& r) {
-			//int tid = tbb::this_task_arena::current_thread_index() % num_partitions;
-			int tid = tbb::this_task_arena::current_thread_index();
-			auto& сnt = local_counts[tid];
-			for (size_t i = r.begin(); i < r.end(); ++i) {
-				uint8_t byte = get_byte(arr[i], byte_pos);
-				сnt[byte]++;
-			}
-		});
-
-	// 2. Построение глобальной гистограммы
-	std::vector<int> count(range, 0);
-	for (int i = 0; i < range; ++i) {
-		for (int t = 0; t < num_partitions; ++t) {
-			count[i] += local_counts[t][i];
-		}
-	}
-
-	// 3. Префиксная сумма
-	std::vector<int> prefix_sum(range, 0);
-	 prefix_sum[0] = count[0];
-	 for (int i = 1; i < range; ++i) {
-		 prefix_sum[i] = prefix_sum[i - 1] + count[i - 1];
-	 }
-
-	 // 4. Атомарные позиции для записи
-	 std::vector<std::atomic<int>> atomic_pos(range);
-	 for (int i = 0; i < range; ++i) {
-		 atomic_pos[i] = prefix_sum[i];
-	 }
-
-	 // 5. Распределение в выходной массив
-	tbb::parallel_for(tbb::blocked_range<size_t>(0, n),
-		[&](const tbb::blocked_range<size_t>& r) {
-			for (size_t i = r.begin(); i < r.end(); ++i) {
-				uint8_t byte = get_byte(arr[i], byte_pos);
-				int pos = atomic_pos[byte].fetch_add(1);
-				output[pos] = arr[i];
-			}
-		});
-
-	arr = std::move(output);
-}
-*/
